@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.prefs.NodeChangeEvent;
@@ -25,6 +27,22 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 2) {
+            if(resultCode == Activity.RESULT_OK){
+                String res=data.getStringExtra("textofnote");
+                Log.i("Data recieved:::::::",res);
+                result.add(new NoteDataModel(res,0));
+                myAdapter.notifyDataSetChanged();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -37,7 +55,14 @@ public class MainActivity extends AppCompatActivity {
 
         if(item.getItemId()==R.id.add){
             Intent intent=new Intent(this,AddNote.class);
-            startActivity(intent);
+            startActivityForResult(intent,2);
+        }
+        else if(item.getItemId()==R.id.count){
+            int countdata=0;
+            for(NoteDataModel temp: result){
+                countdata+=temp.getCount();
+            }
+            Toast.makeText(this,"Total items is: "+countdata,Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -50,28 +75,9 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding= DataBindingUtil.setContentView(this,R.layout.activity_main);
         activityMainBinding.rcv.setLayoutManager(new LinearLayoutManager(this));
         activityMainBinding.rcv.setHasFixedSize(true);
-        myAdapter=new MyAdapter(this,ds.getNotes());
+        myAdapter=new MyAdapter(this,result);
         activityMainBinding.rcv.setAdapter(myAdapter);
         getSupportActionBar().setTitle("Notes");
-
-
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String data;
-        data=getIntent().getStringExtra("textofnote");
-        if(data!=null){
-            //result.add(new NoteDataModel(getIntent().getStringExtra("textofnote")));
-            ds.addNote(new NoteDataModel(getIntent().getStringExtra("textofnote")));
-            myAdapter.notifyDataSetChanged();
-            getIntent().removeExtra("textofnote");
-            for(NoteDataModel d: ds.getNotes()){
-                Log.i("Data set item:::::::::", d.getNotetext()+" is the item");
-            }
-        }
 
 
     }

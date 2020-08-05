@@ -3,5 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/add" android:title="add" app:showAsAction="always"
         android:icon="@drawable/ic_plusbutt"/>
+    <item  android:id="@+id/count" android:title="Count"
+        app:showAsAction="always"/>
 
 </menu>

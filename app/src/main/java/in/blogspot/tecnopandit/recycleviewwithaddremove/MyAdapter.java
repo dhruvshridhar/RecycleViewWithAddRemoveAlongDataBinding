@@ -34,8 +34,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         NoteDataModel note=text.get(position);
+
         holder.recycleviewrowBinding.setNotes(note);
-        holder.recycleviewrowBinding.executePendingBindings();
+        //holder.recycleviewrowBinding.executePendingBindings();
     }
 
     @Override
@@ -50,12 +51,30 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public MyViewHolder(@NonNull RecycleviewrowBinding itemView) {
             super(itemView.getRoot());
             recycleviewrowBinding =itemView;
+            recycleviewrowBinding.executePendingBindings();
             recycleviewrowBinding.remove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     remove(getAdapterPosition());
                     Toast.makeText(recycleviewrowBinding.getRoot().getContext(),"Removed Successfully!",Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            recycleviewrowBinding.add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    text.get(getAdapterPosition()).increment();
+                    notifyDataSetChanged();
+
+                }
+            });
+
+            recycleviewrowBinding.remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    text.get(getAdapterPosition()).decrement();
+                    notifyDataSetChanged();
                 }
             });
 

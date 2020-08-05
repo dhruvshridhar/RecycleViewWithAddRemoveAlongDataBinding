@@ -2,6 +2,7 @@ package in.blogspot.tecnopandit.recycleviewwithaddremove;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -28,9 +29,13 @@ public class AddNote extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!textView.getText().toString().isEmpty()){
-                    Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+                    /*Intent intent=new Intent(getApplicationContext(),MainActivity.class);
                     intent.putExtra("textofnote",textView.getText().toString());
-                    startActivity(intent);
+                    startActivity(intent);*/
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("textofnote",textView.getText().toString());
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
 
                 }
                 else{
